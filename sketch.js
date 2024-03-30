@@ -49,3 +49,22 @@ function dft(x) {
 
     return X;
 }
+
+/**
+ * Creates an array of Rotator objects based on the given parameters.
+ *
+ * @param {Array} f - An array of objects representing the properties of each Rotator.
+ * @returns {Array} - An array of Rotator objects.
+ */
+function getRotators(f) {
+    let rotators = [];
+    let centre = createVector(425, 425);
+
+    for (let i = 0; i < f.length; i++) {
+        let r = new Rotator(centre, f[i].radius, f[i].rps, f[i].startAtAngle, TWO_PI / f.length);
+        centre = r.getTail();
+        rotators.push(r);
+    }
+
+    return rotators;
+}
