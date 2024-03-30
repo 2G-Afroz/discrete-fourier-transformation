@@ -1,15 +1,54 @@
-let r;
+let x =[];
+let fouriers;
+let rotators = [];
+let path;
 
 function setup() {
 	createCanvas(800,800);
 
-	r = new Rotator(createVector(400, 400), 100, 4, 1);
+	let data = rabbitPath;
+	let skip = 1;
+
+	if(skip < 1)
+		return;
+
+	for(let i = 0; i < data.length; i+=skip) {
+        x.push(new Complex(data[i][0]-425, data[i][1]-400));
+    }
+
+	fouriers = dft(x);
+	// Sordting the four
+    fouriers.sort((a, b) => b.radius - a.radius);
+    rotators = getRotators(fouriers);
+
+	path = [];
 }
    
 function draw() {
 	background(0);
-	r.update(0.01);
-	r.draw();
+
+    for (let i = 0; i < rotators.length; i++) {
+        rotators[i].update(TWO_PI/rotators.length);
+        if (i < rotators.length - 1) {
+            rotators[i + 1].setPos(rotators[i].getTail());
+        }
+        rotators[i].draw();
+    }
+
+    let tail = rotators[rotators.length-1].getTail();
+    path.unshift(createVector(tail.x, tail.y));
+
+    beginShape();
+    noFill();
+    stroke(255);
+    for(let i = 0; i < path.length; i++) {
+        vertex(path[i].x, path[i].y);
+    }
+    endShape();
+
+    noStroke();
+    fill(255);
+    text("Rotators: " + rotators.length, 10, 30);
 }
 
 /**
