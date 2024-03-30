@@ -12,5 +12,40 @@ function draw() {
 	r.draw();
 }
 
+/**
+ * Performs the Discrete Fourier Transformation (DFT) on an array of complex numbers.
+ *
+ * @param {Complex[]} x - The input array of complex numbers.
+ * @returns {Object[]} - An array of objects representing the Fourier transform results.
+ */
+function dft(x) {
+    let X = [];
+    let N = x.length;
 
-   
+    for (let k = 0; k < N; k++) {
+        let sum = new Complex(0, 0);
+        for (let n = 0; n < N; n++) {
+            let phi = (2.0 * PI * k * n) / N;
+            let c = new Complex(cos(phi), -sin(phi));
+            sum.add(x[n].mult(c));
+        }
+        sum.re = sum.re / N;
+        sum.im = sum.im / N;
+
+        let rps = k;
+        let radius = sqrt(sum.re * sum.re + sum.im * sum.im);
+        let startAtAngle = atan2(sum.im, sum.re);
+
+        let f = {
+            rel: sum.re,
+            img: sum.im,
+            radius: radius,
+            rps: rps,
+            startAtAngle: startAtAngle
+        };
+
+        X.push(f);
+    }
+
+    return X;
+}
