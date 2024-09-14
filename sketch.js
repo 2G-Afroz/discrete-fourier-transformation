@@ -7,6 +7,7 @@ function setup() {
 	createCanvas(800,800);
 
 	let data = rabbitPath;
+    //let data = afrozPath;
 	let skip = 1;
 
 	if(skip < 1)
